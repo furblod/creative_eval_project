@@ -1,0 +1,7 @@
+file_name,fluency,flexibility,originality,elaboration,creativity_score
+models/adder_code_1.v,1.0,0.5,0.5,0.5,0.625
+models/adder_code_2.v,1.0,0.8,1.0,0.0,0.7
+models/adder_code_3.v,1.0,0.5,1.0,1.0,0.875
+models/mux_code_1.v,1.0,0.5,1.0,1.0,0.875
+models/mux_code_2.v,1.0,0.5,1.0,0.5,0.75
+models/mux_code_3.v,0.8,0.0,1.0,1.0,0.7
