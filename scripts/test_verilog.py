@@ -1,40 +1,70 @@
 import subprocess
-import os
 
 def test_verilog_code(verilog_code_path, testbench_path):
+    """
+    Verilog kodunu derler ve testbench ile simüle eder.
+    Test sonuçlarını ekrana yazdırır ve fonksiyonellik skorunu döndürür.
+    """
     # Verilog kodunu derle
     compile_result = subprocess.run(
         ["iverilog", "-o", "simulation", verilog_code_path, testbench_path],
         capture_output=True, text=True
     )
+
     if compile_result.returncode != 0:
-        print("Compilation Error:\n", compile_result.stderr)
-        return False
+        print(f"Compilation Error in {verilog_code_path}:\n", compile_result.stderr)
+        return 0.0
 
     # Simülasyonu çalıştır
     simulation_result = subprocess.run(
         ["vvp", "simulation"],
         capture_output=True, text=True
     )
-    if simulation_result.returncode != 0:
-        print("Simulation Error:\n", simulation_result.stderr)
-        return False
 
-    # Simülasyon çıktılarını yazdır
-    print("Simülasyon çıktısı:\n", simulation_result.stdout)
-    return True
+    print(f"\nTest Results for {verilog_code_path}:\n")
+    print(simulation_result.stdout)  # Simülasyon çıktısını yazdır
+
+    output = simulation_result.stdout.lower()
+    if "error" in output or "fail" in output:
+        return 0.5  # Kısmi başarı, bazı testler başarısız oldu
+    else:
+        return 1.0  # Tüm testler başarıyla geçti, tam fonksiyonellik
 
 if __name__ == "__main__":
-    # Dosya yollarını tanımlayın
-    verilog_code_path = "models/adder_code_1.v"
-    testbench_path = "prompts/adder_testbench.v"
+    available_modules = {
+        "1": ("models/adder_code_1.v", "prompts/adder_testbench.v"),
+        "2": ("models/adder_code_2.v", "prompts/adder_testbench.v"),
+        "3": ("models/adder_code_3.v", "prompts/adder_testbench.v"),
+        "4": ("models/mux_code_1.v", "prompts/mux_testbench.v"),
+        "5": ("models/mux_code_2.v", "prompts/mux_testbench.v"),
+        "6": ("models/mux_code_3.v", "prompts/mux_testbench.v"),
+        "7": ("models/generated_code_gpt_neo_1.3B.v", "prompts/adder_testbench.v")
+    }
 
-    # Kodun testi
-    if os.path.exists(verilog_code_path) and os.path.exists(testbench_path):
-        success = test_verilog_code(verilog_code_path, testbench_path)
-        if success:
-            print("Verilog code passed all tests!")
-        else:
-            print("Verilog code failed the tests!")
-    else:
-        print("Required files not found. Make sure both the Verilog code and testbench exist.")
+    print("Test edilecek modülleri seçin (örn: 1 3 4):")
+    for key, value in available_modules.items():
+        print(f"{key}. {value[0]}")
+
+    selected_keys = input("Seçimlerinizi boşlukla ayırarak girin: ").split()
+    selected_modules = [available_modules[key] for key in selected_keys if key in available_modules]
+
+    if not selected_modules:
+        print("Geçerli bir seçim yapılmadı. Program sonlandırılıyor.")
+        exit()
+
+    # Sonuç dosyasını kaydetmek için kullanıcıdan isim al
+    result_filename = input("Sonuç dosyası adı (örnek: test_results.csv): ")
+
+    results = []
+    for verilog_code_path, testbench_path in selected_modules:
+        print(f"\nRunning tests for {verilog_code_path}...\n")
+        functionality_score = test_verilog_code(verilog_code_path, testbench_path)
+        results.append((verilog_code_path, functionality_score))
+
+    # Sonuçları kaydet
+    with open(f"data/{result_filename}", "w") as f:
+        f.write("file_name,functionality\n")
+        for file_name, score in results:
+            f.write(f"{file_name},{score}\n")
+
+    print(f"\nResults saved to data/{result_filename}")

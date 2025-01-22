@@ -1,0 +1,4 @@
+file_name,fluency,flexibility,originality,elaboration,functionality,creativity_score
+models/mux_code_1.v,1.0,0.5,1.0,1.0,1.0,0.875
+models/mux_code_2.v,1.0,0.5,1.0,0.5,1.0,0.75
+models/mux_code_3.v,0.8,0.0,1.0,0.0,1.0,0.45
