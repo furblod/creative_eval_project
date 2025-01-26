@@ -19,6 +19,7 @@
             <li>
                 {{ file }} 
                 <a href="{{ url_for('analyze', filename=file) }}">[Analiz Et]</a>
+                <a href="{{ url_for('test', filename=file) }}">[Test Et]</a>
             </li>
         {% endfor %}
     </ul>

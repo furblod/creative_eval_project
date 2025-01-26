@@ -1,15 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for
 import os
-import pandas as pd
+import subprocess
 from analyze_verilog import analyze_verilog_file
 
 app = Flask(__name__)
 
-# Yüklenen dosyalar için yükleme klasörü belirleme
 UPLOAD_FOLDER = 'models'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# Ana sayfa (dosya yükleme ve listeleme)
+# Ana sayfa
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
@@ -26,17 +25,34 @@ def index():
     files = os.listdir(app.config['UPLOAD_FOLDER'])
     return render_template("index.html", files=files)
 
-# Dosya analizi ve sonuçların gösterilmesi
+# Analiz sayfası
 @app.route("/analyze/<filename>")
 def analyze(filename):
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     module_type = "adder" if "adder" in filename else "mux"
     result = analyze_verilog_file(file_path, module_type)
+    
+    return render_template("analysis.html", filename=filename, result=result)
 
-    df = pd.DataFrame([result])
-    df.to_csv(f"data/{filename}_analysis.csv", index=False)
+# Test sayfası
+@app.route("/test/<filename>")
+def test(filename):
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    testbench_path = f"prompts/{'adder' if 'adder' in filename else 'mux'}_testbench.v"
 
-    return render_template("analysis.html", filename=filename, tables=[df.to_html(classes="table table-striped")])
+    # Test işlemi
+    compile_command = ["iverilog", "-o", "simulation", file_path, testbench_path]
+    run_command = ["vvp", "simulation"]
+
+    compile_result = subprocess.run(compile_command, capture_output=True, text=True)
+    
+    if compile_result.returncode != 0:
+        test_output = f"Compilation Error:\n{compile_result.stderr}"
+    else:
+        run_result = subprocess.run(run_command, capture_output=True, text=True)
+        test_output = run_result.stdout
+
+    return render_template("test.html", filename=filename, test_output=test_output)
 
 if __name__ == "__main__":
     app.run(debug=True)
