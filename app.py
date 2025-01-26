@@ -2,6 +2,9 @@ from flask import Flask, render_template, request, redirect, url_for
 import os
 import subprocess
 from analyze_verilog import analyze_verilog_file
+from flask import Flask, render_template, request, redirect, url_for, flash
+import pandas as pd
+
 
 app = Flask(__name__)
 
@@ -31,8 +34,19 @@ def analyze(filename):
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     module_type = "adder" if "adder" in filename else "mux"
     result = analyze_verilog_file(file_path, module_type)
-    
-    return render_template("analysis.html", filename=filename, result=result)
+
+    if not result:
+        flash("Dosya analiz edilemedi.", "danger")
+        return redirect(url_for("index"))
+
+    # Sonuçları DataFrame'e dönüştür
+    df = pd.DataFrame([result])
+
+    # Tabloyu HTML formatına çevir
+    tables = [df.to_html(classes="table table-striped", index=False)]
+
+    return render_template("analysis.html", filename=filename, tables=tables, result=result)
+
 
 # Test sayfası
 @app.route("/test/<filename>")

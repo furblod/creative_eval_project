@@ -7,8 +7,13 @@
 </head>
 <body>
     <h1>{{ filename }} Analiz Sonuçları</h1>
+
+    {% if tables %}
+        {{ tables[0]|safe }}
+    {% else %}
+        <p>Analiz sonucu bulunamadı.</p>
+    {% endif %}
+
     <a href="{{ url_for('index') }}">Ana Sayfaya Dön</a>
-    <br><br>
-    {{ tables[0]|safe }}
 </body>
 </html>
