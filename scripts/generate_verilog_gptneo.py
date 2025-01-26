@@ -1,33 +1,29 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer 
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # Model ve tokenizer seçimi
 model_name = "EleutherAI/gpt-neo-1.3B"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name)
 
-# Prompt (2-to-1 Multiplexer modülü için)
+# Prompt
 prompt = """
-Create a Verilog module that implements a 2-to-1 multiplexer.
+Write a Verilog module for a 2-bit adder with carry-in and carry-out.
 
-Module requirements:
-1. Inputs: a (1 bit), b (1 bit), sel (1 bit selector)
-2. Output: y (1 bit output)
+Inputs:
+- a (1 bit)
+- b (1 bit)
+- cin (1 bit, carry-in)
 
-Use standard Verilog syntax and include 'assign' statement for logic.
-Ensure the module starts with 'module' and ends with 'endmodule'.
+Outputs:
+- sum (1 bit)
+- cout (1 bit, carry-out)
+
+The module should be written in Verilog syntax:
 """
 
 # Modeli kullanarak yanıt üretme
 inputs = tokenizer(prompt, return_tensors="pt")
-outputs = model.generate(
-    **inputs,
-    max_new_tokens=300,
-    do_sample=True,  # Çeşitliliği artırmak için örnekleme
-    temperature=0.7,  # Daha çeşitli yanıtlar almak için sıcaklık
-    top_k=50,  # En iyi 50 sonucu dikkate al
-    top_p=0.9  # En olası sonuçların %90'ını seç
-)
-
+outputs = model.generate(**inputs, max_new_tokens=300)
 response = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
 # Filtreleme: "module" ile başlayıp "endmodule" ile biten kısmı alalım
@@ -40,5 +36,5 @@ else:
 
 # Yanıtı yazdırma ve dosyaya kaydetme
 print("Filtered Verilog Code:\n", filtered_code)
-with open("models/generated_mux_code_filtered.v", "w") as f:
+with open("models/generated_code_gpt_neo_1.3B.v", "w") as f:
     f.write(filtered_code)

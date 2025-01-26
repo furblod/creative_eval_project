@@ -38,7 +38,8 @@ if __name__ == "__main__":
         "4": ("models/mux_code_1.v", "prompts/mux_testbench.v"),
         "5": ("models/mux_code_2.v", "prompts/mux_testbench.v"),
         "6": ("models/mux_code_3.v", "prompts/mux_testbench.v"),
-        "7": ("models/generated_code_gpt_neo_1.3B.v", "prompts/adder_testbench.v")
+        "7": ("models/generated_code_gpt_neo_1.3B.v", "prompts/adder_testbench.v"),
+        "8": ("models/generated_code_phi1.v", "prompts/adder_testbench.v")
     }
 
     print("Test edilecek modülleri seçin (örn: 1 3 4):")
