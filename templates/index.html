@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verilog Dosya Yükleme</title>
+</head>
+<body>
+    <h1>Verilog Dosya Yükleme</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="verilog_file" required>
+        <button type="submit">Yükle</button>
+    </form>
+
+    <h2>Yüklenen Dosyalar</h2>
+    <ul>
+        {% for file in files %}
+            <li>
+                {{ file }} 
+                <a href="{{ url_for('analyze', filename=file) }}">[Analiz Et]</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analiz Sonuçları</title>
+</head>
+<body>
+    <h1>{{ filename }} Analiz Sonuçları</h1>
+    <a href="{{ url_for('index') }}">Ana Sayfaya Dön</a>
+    <br><br>
+    {{ tables[0]|safe }}
+</body>
+</html>

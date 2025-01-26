@@ -1,6 +1,0 @@
-file_name,fluency,flexibility,originality,elaboration,creativity_score
-models/adder_code_1.v,1.0,0.5,0.5,0.5,0.625
-models/adder_code_2.v,1.0,0.8,1.0,0.0,0.7
-models/adder_code_3.v,1.0,0.5,1.0,1.0,0.875
-models/adder_code_gpt_neo_1.3B.v,1.0,0.5,0.0,0.0,0.375
-models/adder_code_phi1.v,1.0,0.8,1.0,0.0,0.7
