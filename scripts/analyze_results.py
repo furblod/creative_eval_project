@@ -4,8 +4,11 @@ import pandas as pd
 from test_verilog import test_verilog_code
 
 def calculate_fluency(verilog_code):
-    required_keywords = ["module", "input", "output", "assign", "endmodule", "wire", "reg", "always", "begin", "end"]
+
+    required_keywords = ["module", "input", "output", "assign", "endmodule"]
+
     keyword_count = sum(1 for keyword in required_keywords if keyword in verilog_code)
+
     ratio = keyword_count / len(required_keywords)
 
     if ratio == 1.0:
@@ -98,7 +101,7 @@ def analyze_verilog_file(file_path, module_type):
         "flexibility": calculate_flexibility(verilog_code),
         "originality": calculate_originality(verilog_code, module_type),
         "elaboration": calculate_elaboration(verilog_code),
-        "functionality": calculate_functionality(file_path, f"prompts/{module_type}_testbench.v")
+        "functionality": calculate_functionality(file_path, f"testbench/{module_type}_testbench.v")
     }
 
     metrics["creativity_score"] = calculate_creativity_score(metrics)
@@ -148,7 +151,7 @@ if __name__ == "__main__":
     for file_path, module_type in selected_modules:
         print(f"{file_path} Analiz ediliyor...")
         metrics = analyze_verilog_file(file_path, module_type)
-        metrics["functionality"] = calculate_functionality(file_path, f"prompts/{module_type}_testbench.v")
+        metrics["functionality"] = calculate_functionality(file_path, f"testbench/{module_type}_testbench.v")
         metrics["file_name"] = file_path
         results.append(metrics)
 

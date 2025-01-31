@@ -4,24 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verilog Dosya Yükleme</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
-<body>
-    <h1>Verilog Dosya Yükleme</h1>
+<body class="bg-light">
 
-    <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="verilog_file" required>
-        <button type="submit">Yükle</button>
-    </form>
+    <div class="container mt-5">
+        <h1 class="text-center text-primary">Verilog Dosya Yükleme</h1>
 
-    <h2>Yüklenen Dosyalar</h2>
-    <ul>
-        {% for file in files %}
-            <li>
-                {{ file }} 
-                <a href="{{ url_for('analyze', filename=file) }}">[Analiz Et]</a>
-                <a href="{{ url_for('test', filename=file) }}">[Test Et]</a>
-            </li>
-        {% endfor %}
-    </ul>
+        <div class="card shadow p-4 mt-4">
+            <form method="POST" enctype="multipart/form-data" class="d-flex">
+                <input type="file" name="verilog_file" class="form-control mr-2" required>
+                <button type="submit" class="btn btn-success">Yükle</button>
+            </form>
+        </div>
+
+        <h2 class="mt-5 text-secondary">Yüklenen Dosyalar</h2>
+        <ul class="list-group mt-3">
+            {% for file in files %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="font-weight-bold text-dark">{{ file }}</span>
+                    <div>
+                        <a href="{{ url_for('analyze', filename=file) }}" class="btn btn-info btn-sm">Analiz Et</a>
+                        <a href="{{ url_for('test', filename=file) }}" class="btn btn-warning btn-sm">Test Et</a>
+                        <form action="{{ url_for('delete', filename=file) }}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bu dosyayı silmek istediğinize emin misiniz?')">Sil</button>
+                        </form>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('generate') }}" class="btn btn-primary">Verilog Kod Üret</a>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

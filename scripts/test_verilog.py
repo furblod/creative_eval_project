@@ -1,11 +1,7 @@
 import subprocess
 
 def test_verilog_code(verilog_code_path, testbench_path):
-    """
-    Verilog kodunu derler ve testbench ile simüle eder.
-    Test sonuçlarını ekrana yazdırır ve fonksiyonellik skorunu döndürür.
-    """
-    # Verilog kodunu derle
+
     compile_result = subprocess.run(
         ["iverilog", "-o", "simulation", verilog_code_path, testbench_path],
         capture_output=True, text=True
@@ -13,33 +9,31 @@ def test_verilog_code(verilog_code_path, testbench_path):
 
     if compile_result.returncode != 0:
         print(f"Compilation Error in {verilog_code_path}:\n", compile_result.stderr)
-        return 0.0
+        return 0.0 #Tüm tesler başarısız oldu
 
-    # Simülasyonu çalıştır
     simulation_result = subprocess.run(
         ["vvp", "simulation"],
         capture_output=True, text=True
     )
 
     print(f"\nTest Results for {verilog_code_path}:\n")
-    print(simulation_result.stdout)  # Simülasyon çıktısını yazdır
+    print(simulation_result.stdout)
 
     output = simulation_result.stdout.lower()
     if "error" in output or "fail" in output:
-        return 0.5  # Kısmi başarı, bazı testler başarısız oldu
+        return 0.5  # Bazı testler başarısız oldu
     else:
-        return 1.0  # Tüm testler başarıyla geçti, tam fonksiyonellik
+        return 1.0  # Tüm testler başarıyla geçti
 
 if __name__ == "__main__":
     available_modules = {
-        "1": ("models/adder_code_1.v", "prompts/adder_testbench.v"),
-        "2": ("models/adder_code_2.v", "prompts/adder_testbench.v"),
-        "3": ("models/adder_code_3.v", "prompts/adder_testbench.v"),
-        "4": ("models/mux_code_1.v", "prompts/mux_testbench.v"),
-        "5": ("models/mux_code_2.v", "prompts/mux_testbench.v"),
-        "6": ("models/mux_code_3.v", "prompts/mux_testbench.v"),
-        "7": ("models/generated_code_gpt_neo_1.3B.v", "prompts/adder_testbench.v"),
-        "8": ("models/generated_code_phi1.v", "prompts/adder_testbench.v")
+        "1": ("models/adder_code_1.v", "testbench/adder_testbench.v"),
+        "2": ("models/adder_code_2.v", "testbench/adder_testbench.v"),
+        "4": ("models/mux_code_1.v", "testbench/mux_testbench.v"),
+        "5": ("models/mux_code_2.v", "testbench/mux_testbench.v"),
+        "6": ("models/mux_code_3.v", "testbench/mux_testbench.v"),
+        "7": ("models/generated_code_gpt_neo_1.3B.v", "testbench/adder_testbench.v"),
+        "8": ("models/generated_code_phi1.v", "testbench/adder_testbench.v")
     }
 
     print("Test edilecek modülleri seçin (örn: 1 3 4):")

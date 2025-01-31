@@ -4,16 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analiz Sonuçları</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
-<body>
-    <h1>{{ filename }} Analiz Sonuçları</h1>
+<body class="bg-light">
 
-    {% if tables %}
-        {{ tables[0]|safe }}
-    {% else %}
-        <p>Analiz sonucu bulunamadı.</p>
-    {% endif %}
+    <div class="container mt-5">
+        <h1 class="text-center text-primary">{{ filename }} Dosyasının Analiz Sonuçları</h1>
 
-    <a href="{{ url_for('index') }}">Ana Sayfaya Dön</a>
+        <div class="card shadow p-4 mt-4">
+            {% if tables %}
+                <div class="table-responsive">
+                    {{ tables[0]|safe }}
+                </div>
+            {% else %}
+                <div class="alert alert-warning text-center">Analiz sonucu bulunamadı.</div>
+            {% endif %}
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Ana Sayfaya Dön</a>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>

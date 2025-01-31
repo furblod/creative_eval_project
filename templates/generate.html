@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verilog Kod Üretimi</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <h1 class="text-center text-primary">Verilog Kod Üretimi</h1>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="alert alert-info">
+              {% for message in messages %}
+                <p>{{ message }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <div class="card shadow p-4 mt-4">
+            <form action="{{ url_for('generate') }}" method="POST">
+                <div class="form-group">
+                    <label for="model" class="font-weight-bold">Model Seçimi:</label>
+                    <select name="model" id="model" class="form-control">
+                        <option value="gpt-neo-1.3B">GPT-Neo 1.3B</option>
+                        <option value="microsoft-phi-1">Microsoft Phi-1</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="filename" class="font-weight-bold">Dosya Adı (örn: my_verilog.v):</label>
+                    <input type="text" name="filename" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="prompt" class="font-weight-bold">Prompt:</label>
+                    <textarea name="prompt" rows="5" class="form-control" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-block">Verilog Kodu Üret</button>
+            </form>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Ana Sayfaya Dön</a>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
